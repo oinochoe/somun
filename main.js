@@ -38,6 +38,7 @@ const cm = {
     const mouse = { x: 0, y: 0 };
     const lights = [];
     const characters = [];
+    const allItems = [];
     let indexOfLight = 0;
 
     function setSize() {
@@ -65,6 +66,10 @@ const cm = {
 
         characters.push(somun);
         characters.push(ji);
+
+        for (let i = 0; i < characters.length; i++) {
+            allItems.push(characters[i]);
+        }
     }
 
     function setup() {
@@ -80,21 +85,21 @@ const cm = {
         let character;
         let scaleRatio;
 
-        for (let i = 0; i < characters.length; i++) {
-            character = characters[i];
-            character.draw();
-        }
+        let item;
 
-        for (let i = 0; i < lights.length; i++) {
-            light = lights[i];
-            scaleRatio = light.y / cm.canvasHeight + 1;
-            cm.context.save();
-            cm.context.translate(light.x, light.y);
-            cm.context.scale(scaleRatio, scaleRatio);
-            cm.context.translate(-light.x, -light.y);
-            light.draw();
-            cm.context.restore();
-            // lights[i].draw();
+        for (let i = 0; i < allItems.length; i++) {
+            item = allItems[i];
+            if(item instanceof Character) {
+                item.draw();
+            } else {
+                scaleRatio = item.y / cm.canvasHeight + 1;
+                cm.context.save();
+                cm.context.translate(item.x, item.y);
+                cm.context.scale(scaleRatio, scaleRatio);
+                cm.context.translate(-item.x, -item.y);
+                item.draw();
+                cm.context.restore();
+            }
         }
 
         cm.playedFrame++;
@@ -114,6 +119,7 @@ const cm = {
 
         const light = new Light(indexOfLight, mouse.x, mouse.y);
         lights.push(light);
+        allItems.push(light);
 
         indexOfLight++;
 
