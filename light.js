@@ -65,6 +65,7 @@ class Light {
     constructor(index, x, y) {
         this.x = x;
         this.y = y;
+        this.yForOrder = this.y;
         this.width = 20;
         this.height = 300;
         this.angle = 0;

@@ -78,6 +78,21 @@ const cm = {
         draw();
     }
 
+    function setZOrder() {
+        let temp;
+        for (let i = 0; i < allItems.length; i++) {
+            for (let j = 0; j < allItems.length - i; j++) {
+                if (j < allItems.length - 1) {
+                    if (allItems[j].yForOrder > allItems[j+1].yForOrder) {
+                        temp = allItems[j];
+                        allItems[j] = allItems[j+1];
+                        allItems[j+1] = temp;
+                    }
+                }
+            }
+        }
+    }
+
     function draw() {
         cm.context.clearRect(0, 0, cm.canvasWidth, cm.canvasHeight);
 
@@ -127,6 +142,8 @@ const cm = {
             characters[0].updateAction('attack');
             characters[1].updateAction('underAttack');
         }
+
+        setZOrder();
     });
 
 
