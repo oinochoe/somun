@@ -28,11 +28,14 @@ const cm = {
         draw();
     }
 
-    const particle = new Particle(100, 400);
+    const light = new Light(100, 400);
 
     function draw() {
-        particle.draw();
+        cm.context.clearRect(0, 0, cm.canvasWidth, cm.canvasHeight);
+        light.draw();
+        requestAnimationFrame(draw);
     }
+
 
     window.addEventListener('resize', setSize);
     window.addEventListener('load', setup);
