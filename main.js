@@ -5,6 +5,7 @@ const cm = {
     context: undefined,
     canvasWidth: 0,
     canvasHeight: 0,
+    playedFrame:0,
     colors: [
         '222, 35, 18', // red
         '238, 150, 63', // orange
@@ -20,7 +21,11 @@ const cm = {
         '195, 255, 170', // green
         '200, 220, 255', // blue
         '239, 173, 255', // purple
-    ]
+    ],
+    charactersSrc: {
+        somun : './sprite-somun.png',
+        ji : './sprite-ji.png'
+    }
 };
 
 (function(){
@@ -32,6 +37,7 @@ const cm = {
     const dpr = 1;
     const mouse = { x: 0, y: 0 };
     const lights = [];
+    const characters = [];
     let indexOfLight = 0;
 
     function setSize() {
@@ -42,8 +48,28 @@ const cm = {
         if(dpr > 1) cm.context.scale(dpr, dpr);
     }
 
+    function setCharacters() {
+        const somun = new Character(
+            cm.charactersSrc.somun,
+            'underAttack',
+            (cm.canvasWidth*0.5) - 256 + 64,
+            (cm.canvasHeight*0.5) - 64
+        );
+
+        const ji = new Character(
+            cm.charactersSrc.ji,
+            'attack',
+            (cm.canvasWidth*0.5) - 64,
+            (cm.canvasHeight*0.5) - 64
+        );
+
+        characters.push(somun);
+        characters.push(ji);
+    }
+
     function setup() {
         setSize();
+        setCharacters();
         draw();
     }
 
@@ -51,7 +77,13 @@ const cm = {
         cm.context.clearRect(0, 0, cm.canvasWidth, cm.canvasHeight);
 
         let light;
+        let character;
         let scaleRatio;
+
+        for (let i = 0; i < characters.length; i++) {
+            character = characters[i];
+            character.draw();
+        }
 
         for (let i = 0; i < lights.length; i++) {
             light = lights[i];
@@ -64,6 +96,12 @@ const cm = {
             cm.context.restore();
             // lights[i].draw();
         }
+
+        cm.playedFrame++;
+        if(cm.playedFrame > 1000000000) {
+            cm.playedFrame = 0;
+        }
+
         requestAnimationFrame(draw);
     }
 
@@ -78,6 +116,11 @@ const cm = {
         lights.push(light);
 
         indexOfLight++;
+
+        if(indexOfLight >= cm.colors.length) {
+            characters[0].updateAction('attack');
+            characters[1].updateAction('underAttack');
+        }
     });
 
 
